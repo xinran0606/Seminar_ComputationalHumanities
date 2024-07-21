@@ -1,0 +1,181 @@
+% !TeX root = main.tex
+\mode<presentation>
+
+% Font & Input Encoding
+\RequirePackage{iftex}
+\ifPDFTeX
+    \RequirePackage[T1]{fontenc}
+    \RequirePackage[utf8]{inputenc}
+\fi
+\ifXeTeX
+    \ClassWarning{beamerthemegoethe}{Use LuaLaTeX instead of XeLaTeX}
+\fi
+
+%% Layout Options 
+% Outer Theme Options
+\DeclareOptionBeamer{frametitlemargin}{\PassOptionsToPackage{frametitlemargin={#1}}{beamerouterthemegoethe}}
+\DeclareOptionBeamer{framefootermargin}{\PassOptionsToPackage{framefootermargin={#1}}{beamerouterthemegoethe}}
+
+% Inner Theme Options
+\DeclareOptionBeamer{titleheight}{\PassOptionsToPackage{titleheight=#1}{beamerinnerthemegoethe}}
+\DeclareOptionBeamer{titledepth}{\PassOptionsToPackage{titledepth=#1}{beamerinnerthemegoethe}}
+\DeclareOptionBeamer{titlemargin}{\PassOptionsToPackage{titlemargin=#1}{beamerinnerthemegoethe}}
+\DeclareOptionBeamer{centertitle}{\PassOptionsToPackage{centertitle}{beamerinnerthemegoethe}}
+\DeclareOptionBeamer{sectionheight}{\PassOptionsToPackage{sectionheight=#1}{beamerinnerthemegoethe}}
+\DeclareOptionBeamer{logo}{\PassOptionsToPackage{logo={#1}}{beamerinnerthemegoethe}}
+\DeclareOptionBeamer{nologo}{\PassOptionsToPackage{nologo}{beamerinnerthemegoethe}}
+\DeclareOptionBeamer{logowidth}{\PassOptionsToPackage{logowidth=#1}{beamerinnerthemegoethe}}
+\DeclareOptionBeamer{centerlogo}{\PassOptionsToPackage{centerlogo}{beamerinnerthemegoethe}}
+
+% Color Theme Options
+\DeclareOptionBeamer{ttlabcolors}{\PassOptionsToPackage{ttlabcolors}{beamercolorthemegoethe}}
+\DeclareOptionBeamer{materialcolors}{\PassOptionsToPackage{materialcolors}{beamercolorthemegoethe}}
+\DeclareOptionBeamer{alphabetcolors}{\PassOptionsToPackage{alphabetcolors}{beamercolorthemegoethe}}
+\DeclareOptionBeamer{greenarmytagecolors}{\PassOptionsToPackage{greenarmytagecolors}{beamercolorthemegoethe}}
+
+% Layout Options
+\DeclareOptionBeamer{nonavigation}{\setbeamertemplate{navigation symbols}{}}
+
+% Import Options%% Common Options
+\newcommand{\polyglossiaLang}{english}
+\DeclareOptionBeamer{english}{
+    \PassOptionsToPackage{english}{babel}%
+    \renewcommand{\polyglossiaLang}{english}%
+}
+\DeclareOptionBeamer{german}{
+    \PassOptionsToPackage{ngerman}{babel}%
+    \renewcommand{\polyglossiaLang}{german}%
+}
+\DeclareOptionBeamer{ngerman}{
+    \PassOptionsToPackage{ngerman}{babel}%
+    \renewcommand{\polyglossiaLang}{german}%
+}
+\ExecuteOptionsBeamer{english}
+
+\RequirePackage{ifthen}
+\DeclareOptionBeamer{localization}{
+    \ifthenelse{\equal{#1}{babel}}
+    {\usepackage{babel}}
+    {\ifthenelse{\equal{#1}{polyglossia}}
+        {
+            \RequirePackage{polyglossia}
+            \setdefaultlanguage[]{\polyglossiaLang}
+        }
+        {\ifthenelse{\equal{#1}{none}}
+            {}
+            {\ClassWarning{beamerthemegoethe}{No valid localization engine was chosen, is this intended? If yes, pass none to disable this warning.}}}
+    }
+}
+\ExecuteOptionsBeamer{localization=babel}
+
+\DeclareOptionBeamer{biblatexbackend}{\PassOptionsToPackage{backend=#1}{biblatex}}
+% \ExecuteOptionsBeamer{biblatexbackend=bibtex}
+
+\DeclareOptionBeamer{libertine}{
+    \RequirePackage{fontspec}
+    \setromanfont[Ligatures=TeX]{Linux Libertine O} % Serifenschrift
+    \setsansfont[Ligatures=TeX]{Linux Biolinum O} % serifenlose Schrift
+    \setmonofont[Scale=MatchLowercase]{DejaVu Sans Mono}%
+}
+
+\DeclareOptionBeamer{firacode}{
+    \RequirePackage{fontspec}
+    \setmonofont{FiraCode-Regular.ttf}[
+        Path={./fonts/},
+        % Upright italic font for nice formatted minted comments
+        ItalicFont={FiraCode-Light.ttf},
+        BoldFont={FiraCode-SemiBold.ttf},
+        % Fake slant in bold+italic
+        BoldItalicFont={FiraCode-SemiBold.ttf},
+        BoldItalicFeatures={FakeSlant=0.2},
+        % Scale monofont by lowercase in regard to main roman font
+        Scale=MatchLowercase,
+        % Enable ligatures
+        Ligatures=TeX,
+        Contextuals={Alternate},
+        % Enable tradtional & and @, and thin backlash \\
+        StylisticSet={3,5,6}
+    ]
+}
+
+\DeclareOptionBeamer{minted}{
+    \RequirePackage[newfloat=true]{minted}
+    \RequirePackage{mdframed}
+
+    \setminted{fontsize=\footnotesize,mathescape,autogobble,breaklines,tabsize=4}
+    \newminted{cypher}{fontsize=\footnotesize,mathescape,linenos,autogobble,texcomments=true,breaklines}
+    \newminted{python}{fontsize=\footnotesize,mathescape,linenos,autogobble,python3,escapeinside=||}
+    \newminted[longpythoncode]{python}{fontsize=\footnotesize,mathescape,linenos,autogobble,python3,escapeinside=||,frame=lines}
+}
+
+\DeclareOptionBeamer{tikz}{
+    %% TikZ und Co. %%
+    \RequirePackage{tikz}
+    \usetikzlibrary{arrows.meta}
+    \usetikzlibrary{arrows}
+    \usetikzlibrary{automata}
+    \usetikzlibrary{babel}
+    \usetikzlibrary{backgrounds}
+    \usetikzlibrary{calc}
+    \usetikzlibrary{calendar}
+    \usetikzlibrary{chains}
+    \usetikzlibrary{decorations.pathmorphing}
+    \usetikzlibrary{decorations.pathreplacing}
+    \usetikzlibrary{er}
+    \usetikzlibrary{fit}
+    \usetikzlibrary{matrix}
+    \usetikzlibrary{mindmap}
+    \usetikzlibrary{patterns.meta}
+    \usetikzlibrary{patterns}
+    \usetikzlibrary{positioning}
+    \usetikzlibrary{scopes}
+    \usetikzlibrary{shadings}
+    \usetikzlibrary{shadows}
+    \usetikzlibrary{shapes.arrows}
+    \usetikzlibrary{shapes.callouts}
+    \usetikzlibrary{shapes.geometric}
+    \usetikzlibrary{shapes.misc}
+    \usetikzlibrary{shapes.multipart}
+    \usetikzlibrary{shapes.symbols}
+    \usetikzlibrary{through}
+    \usetikzlibrary{topaths}
+
+    \RequirePackage[linguistics]{forest}
+
+    \RequirePackage{pgf,pgfplots,etoolbox}
+    \pgfplotsset{compat=newest}
+}
+
+\DeclareOptionBeamer{cleveref}{
+    \RequirePackage[nameinlink, noabbrev]{cleveref}
+    \crefname{listing}{listing}{listings}
+    \Crefname{listing}{Listing}{Listings}
+    \crefname{algorithm}{algorithm}{algorithms}
+    \Crefname{algorithm}{Algorithm}{Algorithms}
+    \crefname{query}{query}{queries}
+    \Crefname{query}{Query}{Queries}
+}
+
+\ProcessOptionsBeamer\relax
+
+\usecolortheme{goethe}
+\usefonttheme{goethe}
+\useoutertheme{goethe}
+\useinnertheme{goethe}
+
+\usepackage{beamerimportsgoethe}
+
+\RequirePackage{fontawesome5} % Font Awesome symbols
+\setbeamertemplate{itemize item}{\faAngleRight}
+\setbeamertemplate{itemize subitem}{\faAngleRight\hspace*{-1pt}\faAngleRight}
+\setbeamertemplate{itemize subsubitem}{\faAngleRight\hspace*{-1pt}\faAngleRight\hspace*{-1pt}\faAngleRight}
+
+% \setbeamertemplate{bibliography item}{\insertbiblabel}
+\setbeamertemplate{bibliography item}{}
+
+\setbeamertemplate{sections/subsections in toc}[sections numbered]
+\setbeamertemplate{sections/subsections in toc shaded}[goethe][60]
+
+\renewcommand{\And}{\texorpdfstring{\\}{, }}
+
+\mode<all>

@@ -1,0 +1,205 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerimportsgoethe}[2023/04/18 Miscellaneous imports and settings for the TTLab LaTeX beamer template]
+
+%% Settings
+% 3 levels of section nestings
+\setcounter{secnumdepth}{3}
+% but only show two in the table of contents
+\setcounter{tocdepth}{2}
+
+% No paragraph indent
+\setlength\parindent{0pt}
+\addtolength\parskip{6pt}
+
+% Layout
+\RequirePackage{scrhack}
+\RequirePackage{microtype}
+\RequirePackage{relsize}
+
+% Maths
+\RequirePackage{amsmath} % AMS macros
+\RequirePackage{amsthm} % Theorems
+\RequirePackage{mathtools} % amsmath extension, e.g. \coloneqq (:=)
+
+\RequirePackage[np]{numprint} % Pretty print numbers
+\npthousandsep{\,} % Use small space as thousand separator
+\npdecimalsign{\ensuremath{.}} % Use period as decimal sign
+
+% % Fonts, including double stroke and blackboard fonts
+\RequirePackage{amsfonts} % e.g. blackboard letters \mathbb{} 
+% \RequirePackage{amssymb} % could use instead of amsfonts?
+% \RequirePackage{bm} % Bold math fonts
+\RequirePackage{dsfont} % \mathds{} for double stroke fonts
+\RequirePackage[lm]{sfmath} % Sans Serif maths
+\RequirePackage{soulutf8} % Strikeout, underlining etc. with support for UTF-8 symbols
+
+% Graphics and colors
+\RequirePackage{graphicx}
+\RequirePackage{adjustbox}
+\RequirePackage{xcolor} % already loaded by acl package..
+\RequirePackage{tcolorbox}
+
+% Tables (nowadays only tblr)
+\RequirePackage{tabularray}
+\UseTblrLibrary{amsmath}
+\UseTblrLibrary{booktabs}
+\UseTblrLibrary{functional}
+
+% Floats, subfigures
+\RequirePackage{float}
+\RequirePackage{stfloats}
+\RequirePackage{subcaption}
+
+%% Bibliography %%
+\usepackage[
+    style=authoryear-icomp,
+    citestyle=authoryear,
+    natbib=true,
+    backend=biber,
+]{biblatex}
+\DefineBibliographyStrings{german}{%
+    andothers = {et\addabbrvspace al\adddot}
+}
+\DefineBibliographyStrings{ngerman}{%
+    andothers = {et\addabbrvspace al\adddot}
+}
+\DefineBibliographyStrings{english}{%
+    andothers = {et\addabbrvspace al\adddot}
+}
+\DeclareDelimFormat[coloncite]{postnotedelim}{\addcolon}
+\DeclareFieldFormat{postnote}{#1}
+
+\newbibmacro*{coloncite:postnote}{%
+    \iffieldundef{postnote}
+    {\ifbool{cbx:parens}
+        {\bibcloseparen}
+        {}}
+    {\ifbool{cbx:parens}
+        {\setunit{\printdelim[coloncite]{postnotedelim}}}
+        {\setunit{\printdelim{extpostnotedelim}\bibopenparen}}%
+        \printfield[coloncite]{postnote}\bibcloseparen}}
+
+\DeclareCiteCommand{\coloncite}
+{\boolfalse{cbx:parens}}
+{\usebibmacro{citeindex}%
+    \iffirstcitekey
+    {\setcounter{textcitetotal}{1}}
+    {\stepcounter{textcitetotal}\textcitedelim}%
+    \usebibmacro{textcite}}
+{\ifbool{cbx:parens}
+    {\bibcloseparen\global\boolfalse{cbx:parens}}
+    {}}
+{\usebibmacro{coloncite:postnote}}
+
+\newbibmacro*{coloncitep:postnote}{%
+    \iffieldundef{postnote}
+    {}
+    {\setunit{\printdelim[coloncite]{postnotedelim}}%
+        \printfield[coloncite]{postnote}}}
+
+\DeclareCiteCommand{\coloncitep}[\mkbibparens]
+{\usebibmacro{prenote}}
+{\usebibmacro{citeindex}%
+    \usebibmacro{cite}}
+{\multicitedelim}
+{\usebibmacro{coloncitep:postnote}}
+
+% Misc
+\RequirePackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    anchorcolor=blue,
+    linkcolor=blue,
+    citecolor=blue,
+    filecolor=magenta,
+    urlcolor=blue,
+    % pdfsubject={},
+}
+
+\RequirePackage{csquotes}
+
+
+%% Commands %%
+\newcommand{\tsf}[1]{\textsf{#1}}
+\newcommand{\ttt}[1]{\texttt{#1}}
+\newcommand{\npp}[1]{\numprint[\%]{#1}}
+
+%% Math Operators %%
+
+% Models
+\DeclareMathOperator{\LSTM}{\ensuremath{\mathsf{LSTM}}}
+\DeclareMathOperator{\BiLSTM}{\ensuremath{\mathsf{BiLSTM}}}
+\DeclareMathOperator{\Linear}{\ensuremath{\mathsf{Linear}}}
+\DeclareMathOperator{\Dropout}{\ensuremath{\mathsf{Dropout}}}
+\DeclareMathOperator{\LayerNorm}{\ensuremath{\mathsf{LayerNorm}}}
+\DeclareMathOperator{\ConvOneD}{\ensuremath{\mathsf{Conv1D}}}
+\DeclareMathOperator{\WordEmbedding}{\ensuremath{\mathsf{WordEmbedding}}}
+\DeclareMathOperator{\CharEmbedding}{\ensuremath{\mathsf{CharEmbedding}}}
+\DeclareMathOperator{\LanguageModel}{\ensuremath{\mathsf{LanguageModel}}}
+\DeclareMathOperator{\SubwordPooling}{\ensuremath{\mathsf{SubwordPooling}}}
+\DeclareMathOperator{\TreeLSTM}{\ensuremath{\mathsf{TreeLSTM}}}
+\DeclareMathOperator{\StackLSTM}{\ensuremath{\mathsf{StackLSTM}}}
+
+% Language Modelling
+\DeclareMathOperator{\similar}{\ensuremath{sim}}
+\DeclareMathOperator{\tokenizer}{\ensuremath{\mathit{tokenize}}}
+\DeclareMathOperator{\embed}{\ensuremath{\mathit{embed}}}
+
+% Misc
+\DeclareMathOperator{\mean}{\ensuremath{\mathit{mean}}}
+\newcommand{\vv}[2][b]{\vec{\vphantom{#1}#2}}
+
+% Performance Measures
+\DeclareMathOperator{\precision}{\ensuremath{\mathit{precision}}}
+\DeclareMathOperator{\recall}{\ensuremath{\mathit{recall}}}
+\DeclareMathOperator{\fone}{\ensuremath{\mathit{F_1}}}
+
+%% Environments
+% Custom float environments using newfloat
+\RequirePackage{newfloat}
+\RequirePackage{ltxcmds}
+\ltx@ifpackageloaded{minted}{
+    \SetupFloatingEnvironment{listing}{name=Listing}
+
+    \AtBeginEnvironment{snugshade*}{\vspace{-\FrameSep}}
+    \AfterEndEnvironment{snugshade*}{\vspace{-\FrameSep}}
+
+    \AtBeginEnvironment{minted}{\renewcommand{\fcolorbox}[4][]{#4}}
+
+    % Add frames above and below the minted environment
+    %%begin novalidate
+    \BeforeBeginEnvironment{minted}{\begin{mdframed}[rightline=false,leftline=false,linewidth=0.6pt]}
+            \AfterEndEnvironment{minted}{\end{mdframed}}
+    %%end novalidate
+}{
+    \DeclareFloatingEnvironment[
+        name=Listing,
+        placement=h,
+        within=section
+    ]{listing}
+}
+\captionsetup[listing]{position=top,skip=-8pt}
+\floatname{listing}{Listing}
+\AtEndEnvironment{listing}{\vspace{-14pt}}
+
+\DeclareFloatingEnvironment[
+    name=Algorithm,
+    listname={List of Algorithms},
+    placement=h,
+    within=section
+]{algorithm}
+\captionsetup[algorithm]{position=top,skip=-8pt}
+\floatname{algorithm}{Algorithm}
+\AtEndEnvironment{algorithm}{\vspace{-14pt}}
+
+\DeclareFloatingEnvironment[
+    name=Query,
+    listname={List of Queries},
+    placement=h,
+    within=section
+]{query}
+\captionsetup[query]{position=top,skip=-8pt}
+\floatname{query}{Query}
+\AtEndEnvironment{query}{\vspace{-14pt}}
+
+\providecommand{\listofqueries}{\listof{query}{\listofqueriescaption}}
